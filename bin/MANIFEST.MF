@@ -1,0 +1,6 @@
+
+            Built-By: EZ-ZARZOURI
+            Implementation-Version: 1.0
+            Main-Class: fr.ubo.tetris.Tetris
+            Class-Path: lib/commons-lang3-3.5.jar
+        

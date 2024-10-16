@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Compilation de Tetris" default="all" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <taskdef resource="org/apache/ivy/ant/antlib.xml">
+        <classpath>
+            <pathelement location="/opt/ivy/apache-ivy-2.5.0/ivy-2.5.0.jar"/>
+        </classpath>
+    </taskdef>
+
+    <!-- Déclaration des propriétés -->
+    <property name="src.dir" value="src"/>
+    <property name="obj.dir" value="bin"/>
+    <property name="libs.dir" value="lib"/>
+    <property name="main.class" value="fr.ubo.tetris.Tetris"/>
+    <property name="compile.classpath" value="${libs.dir}/commons-lang3-3.5.jar"/>
+    <property name="version" value="1.0"/>
+    <property name="test.dir" value="test"/>
+    <property name="test.results.dir" value="test-results"/>
+    <property name="test.reports.dir" value="test-reports"/>
+    <property name="doc.dir" value="javadoc"/>
+
+    <!-- Cible pour nettoyer les fichiers compilés -->
+    <target name="clean">
+        <echo message="Suppression des fichiers issus de la compilation"/>
+        <delete dir="${obj.dir}"/>
+        <delete dir="${libs.dir}"/>
+        <mkdir dir="${libs.dir}"/>
+    </target>
+
+    <!-- Cible pour récupérer les dépendances -->
+    <target name="retrieve">
+        <ivy:settings />
+        <ivy:resolve />
+        <ivy:retrieve sync="true" type="jar"/>
+    </target>
+
+    <!-- Cible pour compiler le projet -->
+    <target name="compile" depends="retrieve">
+        <mkdir dir="${obj.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${obj.dir}" includeantruntime="false">
+            <classpath>
+                <pathelement path="${compile.classpath}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- Cible pour compiler les tests -->
+    <target name="compile-test" depends="retrieve">
+        <mkdir dir="${obj.dir}"/>
+        <javac srcdir="${test.dir}" destdir="${obj.dir}" includeantruntime="false">
+            <classpath>
+                <fileset dir="${libs.dir}">
+                    <include name="**/junit-*.jar"/> <!-- Inclure le JAR de JUnit -->
+                </fileset>
+                <fileset dir="${libs.dir}">
+                    <include name="**/*.jar"/> <!-- Inclure toutes les autres bibliothèques -->
+                </fileset>
+                <pathelement path="${obj.dir}"/> 
+            </classpath>
+        </javac>
+    </target>
+
+	
+	
+	<target name="test" depends="compile-test">
+	        <mkdir dir="${test.results.dir}"/>
+	        
+	        <junit fork="yes" printsummary="true" haltonfailure="no">
+	            <classpath>
+	                <fileset dir="${libs.dir}">
+	                    <include name="**/*.jar"/>
+	                </fileset>
+	                <pathelement location="${obj.dir}"/> 
+	            </classpath>
+
+	            <formatter type="plain"/> 
+	            <formatter type="xml"/> 
+
+	       
+	            <test name="fr.ubo.tetris.TestShape" todir="${test.results.dir}"/>
+	        </junit>
+	        
+	        <echo message="Check test results in ${test.results.dir}"/>
+	    </target>
+	
+
+
+
+
+    <!-- Cible pour générer les rapports de tests unitaires au format HTML -->
+    <target name="test-reports" depends="test">
+        <mkdir dir="${test.reports.dir}"/> 
+
+        <junitreport todir="${test.reports.dir}">
+            <fileset dir="${test.results.dir}">
+                <include name="TEST-*.xml"/> 
+            </fileset>
+        </junitreport>
+    </target>
+
+    <!-- Cible pour générer la documentation Javadoc -->
+    <target name="javadoc" depends="compile">
+        <mkdir dir="${doc.dir}"/> 
+        <javadoc destdir="${doc.dir}" sourcepath="${src.dir}" packagenames="fr.ubo.tetris">
+            <classpath>
+                <pathelement path="${compile.classpath}"/>
+                <pathelement path="${obj.dir}"/>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <!-- Cible pour créer le JAR exécutable -->
+    <target name="dist" depends="clean, compile, javadoc">
+        <mkdir dir="${obj.dir}"/>
+        <echo file="${obj.dir}/MANIFEST.MF">
+            Built-By: EZ-ZARZOURI
+            Implementation-Version: ${version}
+            Main-Class: ${main.class}
+            Class-Path: ${compile.classpath}
+        </echo>
+        <jar destfile="${obj.dir}/Tetris.jar" basedir="${obj.dir}">
+            <manifest>
+                <attribute name="Built-By" value="EZ-ZARZOURI"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+                <attribute name="Main-Class" value="${main.class}"/>
+                <attribute name="Class-Path" value="${compile.classpath}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Cible pour toutes les tâches -->
+    <target name="all" depends="dist, test-reports, javadoc">
+        <echo message="All tasks completed successfully."/>
+    </target>
+
+</project>
