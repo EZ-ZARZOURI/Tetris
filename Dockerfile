@@ -14,8 +14,8 @@ RUN apt-get update -qq && \
 # Configuration de ssmtp
 RUN echo "root=postmaster" > /etc/ssmtp/ssmtp.conf && \
     echo "mailhub=smtp.gmail.com:587" >> /etc/ssmtp/ssmtp.conf && \
-    echo "AuthUser=your_gmail@gmail.com" >> /etc/ssmtp/ssmtp.conf && \
-    echo "AuthPass=your_gmail_app_password" >> /etc/ssmtp/ssmtp.conf && \
+    echo "AuthUser=houda.ezzarzouri@gmail.com" >> /etc/ssmtp/ssmtp.conf && \
+    echo "AuthPass=yhouda" >> /etc/ssmtp/ssmtp.conf && \
     echo "UseSTARTTLS=YES" >> /etc/ssmtp/ssmtp.conf && \
     echo "UseTLS=YES" >> /etc/ssmtp/ssmtp.conf
 
