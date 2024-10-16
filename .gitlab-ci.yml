@@ -12,7 +12,6 @@ build:
   script:
     # Authentification si nécessaire (décommenter si vous poussez vers un registre privé)
     # - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    # - docker build -t $CI_REGISTRY_IMAGE/tetris:$CI_COMMIT_REF_SLUG .
-	- docker build -t registry.gitlab.com/dosi/pic/ez-zarzouri-houda/tetris:$CI_COMMIT_REF_SLUG .
+    - docker build -t registry.gitlab.com/dosi/pic/ez-zarzouri-houda/tetris:$CI_COMMIT_REF_SLUG .
   only:
     - branches
