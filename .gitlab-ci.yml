@@ -1,15 +1,13 @@
 stages:
   - build
-  - run
 
-# Job pour construire l'image Docker
 build:
   stage: build
   image: docker:24.0.2
   services:
     - docker:24.0.2-dind
   tags:
-    - dosi   # Placez le tag ici, à l'intérieur du job
+    - dosi   
   script:
     # Authentification si nécessaire (décommenter si vous poussez vers un registre privé)
     # - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
@@ -17,18 +15,3 @@ build:
   only:
     - branches
 
-# Job pour exécuter l'application
-run:
-  stage: run
-  image: docker:24.0.2
-  services:
-    - docker:24.0.2-dind
-  tags:
-    - dosi
-  script:
-    # Démarre un conteneur à partir de l'image construite dans le job de build
-    - docker run -d --name tetris_app registry.gitlab.com/dosi/pic/ez-zarzouri-houda/tetris:$CI_COMMIT_REF_SLUG
-    # Facultatif : vérifie que le conteneur fonctionne correctement
-    - docker ps | grep tetris_app
-  only:
-    - branches
