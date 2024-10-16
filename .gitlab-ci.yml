@@ -8,10 +8,11 @@ build:
   services:
     - docker:24.0.2-dind
   tags:
-    - dosi  # Utiliser le runner avec le tag 'dosi1'
+    - dosi  #
   script:
     # Authentification si nécessaire (décommenter si tu pushes vers un registre privé)
     # - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE/tetris:$CI_COMMIT_REF_SLUG .
+    # - docker build -t $CI_REGISTRY_IMAGE/tetris:$CI_COMMIT_REF_SLUG .
+	- docker build -t registry.gitlab.com/EZ-ZARZOURI Houda/tetris/tetris:$CI_COMMIT_REF_SLUG .
   only:
-    - main
+    - branches
