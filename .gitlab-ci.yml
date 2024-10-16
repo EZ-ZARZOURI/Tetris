@@ -8,6 +8,9 @@ build:
   image: docker:24.0.2
   services:
     - docker:24.0.2-dind
+	
+  tags:
+	- dosi1 
   script:
     # Authentification si nécessaire (décommenter si tu pushes vers un registre privé)
     # - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
