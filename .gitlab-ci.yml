@@ -15,3 +15,20 @@ build:
     - docker build -t registry.gitlab.com/dosi/pic/ez-zarzouri-houda/tetris:$CI_COMMIT_REF_SLUG .
   only:
     - branches
+
+	
+	# Job pour exécuter l'application
+	run:
+	  stage: run
+	  image: docker:24.0.2
+	  services:
+	    - docker:24.0.2-dind
+	  tags:
+	    - dosi
+	  script:
+	    # Démarre un conteneur à partir de l'image construite dans le job de build
+	    - docker run -d --name tetris_app registry.gitlab.com/dosi/pic/ez-zarzouri-houda/tetris:$CI_COMMIT_REF_SLUG
+	    # Facultatif : vérifie que le conteneur fonctionne correctement
+	    - docker ps | grep tetris_app
+	  only:
+	    - branches
